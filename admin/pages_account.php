@@ -5,32 +5,54 @@ include('conf/checklogin.php');
 check_login();
 $admin_id = $_SESSION['admin_id'];
 //update logged in user account
+// Check if the form with the name 'update_account' has been submitted
 if (isset($_POST['update_account'])) {
+    // Retrieve values from the submitted form data
     $name = $_POST['name'];
     $admin_id = $_SESSION['admin_id'];
     $email = $_POST['email'];
-    //insert unto certain table in database
+    //insert into certain table in database
+    // Prepare an SQL query to update data in the 'iB_admin' table
     $query = "UPDATE iB_admin  SET name=?, email=? WHERE  admin_id=?";
+    // Prepare the SQL statement for execution
     $stmt = $mysqli->prepare($query);
-    //bind paramaters
+    // Bind parameters to the prepared statement
     $rc = $stmt->bind_param('ssi', $name, $email, $admin_id);
+    // Execute the prepared statement
     $stmt->execute();
     //declare a varible which will be passed to alert function
+    // Check if the statement was executed successfully
     if ($stmt) {
+        // If successful, set a success message
         $success = "Account Updated";
     } else {
+        // If unsuccessful, set an error message
         $err = "Please Try Again Or Try Later";
     }
 }
+/* The code retrieves the user's input from the submitted form ($name, $admin_id, and $email).
+It constructs an SQL query to update the 'iB_admin' table where the 'admin_id' matches the session's 'admin_id'.
+The query is prepared using $mysqli->prepare().
+Parameters are bound to the prepared statement using $stmt->bind_param() (s for string, i for integer).
+The prepared statement is executed with $stmt->execute().
+If the execution is successful, a success message is set. 
+Otherwise, an error message is set. Note that the check if ($stmt) 
+might not be entirely accurate for checking success. 
+Typically, you would check for errors using $stmt->error or similar methods.*/
 //change password
+// Check if the form with the name 'change_password' has been submitted
 if (isset($_POST['change_password'])) {
+    // Hash the user-provided password using md5
     $password = sha1(md5($_POST['password']));
+    // Retrieve the admin_id from the session
     $admin_id = $_SESSION['admin_id'];
-    //insert unto certain table in database
+    // Prepare an SQL query to update the password in the 'iB_admin' table
     $query = "UPDATE iB_admin  SET password=? WHERE  admin_id=?";
+    // Prepare the SQL statement for execution
     $stmt = $mysqli->prepare($query);
-    //bind paramaters
+    //bind paramaters to the prepared statement
     $rc = $stmt->bind_param('si', $password, $admin_id);
+    // Execute the prepared statement
     $stmt->execute();
     //declare a varible which will be passed to alert function
     if ($stmt) {
@@ -39,6 +61,13 @@ if (isset($_POST['change_password'])) {
         $err = "Please Try Again Or Try Later";
     }
 }
+/* The code hashes the user-provided password using both md5.
+The admin_id is retrieved from the session.
+An SQL query is prepared to update the 'password' field in the 'iB_admin' table where the 'admin_id' matches the session's 'admin_id'.
+Parameters are bound to the prepared statement using $stmt->bind_param() (s for string, i for integer).
+The prepared statement is executed with $stmt->execute().
+If the execution is successful, a success message is set. 
+Otherwise, an error message is set. Again, checking for errors using $stmt->error or similar methods would be more accurate.*/
 
 
 ?>
@@ -60,14 +89,20 @@ if (isset($_POST['change_password'])) {
         <div class="content-wrapper">
             <!-- Content Header with logged in user details (Page header) -->
             <?php
+            // Retrieve admin_id from the session
             $admin_id = $_SESSION['admin_id'];
+            // Prepare an SQL query to select all columns from the 'iB_admin' table where admin_id matches the session's admin_id
             $ret = "SELECT * FROM  iB_admin  WHERE admin_id = ? ";
+            // Prepare the SQL statement for execution
             $stmt = $mysqli->prepare($ret);
+            // Bind parameter to the prepared statement (i for integer)
             $stmt->bind_param('i', $admin_id);
+            // Execute the prepared statement
             $stmt->execute(); //ok
-            $res = $stmt->get_result();
+            $res = $stmt->get_result();// Get the result set
             while ($row = $res->fetch_object()) {
                 //set automatically logged in user default image if they have not updated their pics
+                // Check if the user has not updated their profile picture
                 if ($row->profile_pic == '') {
                     $profile_picture = "
 
@@ -77,6 +112,7 @@ if (isset($_POST['change_password'])) {
 
                         ";
                 } else {
+                    // If the user has updated their profile picture, use the provided image
                     $profile_picture = "
 
                         <img class=' img-fluid'
@@ -85,9 +121,17 @@ if (isset($_POST['change_password'])) {
 
                         ";
                 }
-
-
             ?>
+            <!--
+                Admin_id is retrieved from the session.
+An SQL query is prepared to select all columns from the 'iB_admin' table where admin_id matches the session's admin_id.
+Parameters are bound to the prepared statement using $stmt->bind_param() (i for integer).
+The prepared statement is executed with $stmt->execute().
+The result set is obtained using $stmt->get_result().
+Inside the while loop, it checks if the user has updated their profile picture. 
+If not, a default image is used; otherwise, the user's provided image is used.
+The HTML for the profile picture is stored in the $profile_picture variable.
+             -->
                 <section class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
