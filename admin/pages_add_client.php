@@ -4,17 +4,20 @@ include('conf/config.php');
 include('conf/checklogin.php');
 check_login();
 $admin_id = $_SESSION['admin_id'];
-//register new account
+// Check if the form with the name 'create_staff_account' has been submitted
 if (isset($_POST['create_staff_account'])) {
     //Register  Client
+
+    //Retrive from data
     $name = $_POST['name'];
     $national_id = $_POST['national_id'];
     $client_number = $_POST['client_number'];
     $phone = $_POST['phone'];
     $email = $_POST['email'];
+    // Hash the password using md5 and sha1
     $password = sha1(md5($_POST['password']));
     $address  = $_POST['address'];
-
+    // Retrieve the profile picture file name and move the uploaded file to a specific directory
     $profile_pic  = $_FILES["profile_pic"]["name"];
     move_uploaded_file($_FILES["profile_pic"]["tmp_name"], "dist/img/" . $_FILES["profile_pic"]["name"]);
 
@@ -32,7 +35,14 @@ if (isset($_POST['create_staff_account'])) {
         $err = "Please Try Again Or Try Later";
     }
 }
-
+/* The code checks if the form with the name 'create_staff_account' has been submitted.
+Form data, including the client's name, national ID, client number, phone, email, password, address, and profile picture, is retrieved from the POST request.
+The password is hashed using both md5 and sha1. Using stronger password hashing methods like bcrypt or Argon2 is recommended.
+The client's profile picture is uploaded to the 'dist/img/' directory.
+An SQL query is prepared to insert the captured information into the 'iB_clients' table.
+Parameters are bound to the prepared statement using $stmt->bind_param() (s for string).
+The prepared statement is executed with $stmt->execute().
+If the execution is successful, a success message is set. Otherwise, an error message is set.*/
 ?>
 <!DOCTYPE html>
 <html><meta http-equiv="content-type" content="text/html;charset=utf-8" />

@@ -1,9 +1,14 @@
 <?php
+//start session
 session_start();
+// Include necessary configuration and authentication check files
 include('conf/config.php');
 include('conf/checklogin.php');
+// Perform user authentication check
 check_login();
+// Retrieve admin_id from the session
 $admin_id = $_SESSION['admin_id'];
+// Check if the form with the name 'create_acc_type' has been submitted
 if (isset($_POST['create_acc_type'])) {
     //Register  account type
     $name = $_POST['name'];
@@ -11,20 +16,36 @@ if (isset($_POST['create_acc_type'])) {
     $rate = $_POST['rate'];
     $code = $_POST['code'];
 
-    //Insert Captured information to a database table
+    // Insert captured information into the 'iB_Acc_types' table in the database
     $query = "INSERT INTO iB_Acc_types (name, description, rate, code) VALUES (?,?,?,?)";
     $stmt = $mysqli->prepare($query);
-    //bind paramaters
+    //bind paramaters to the prepared statement (s for string)
     $rc = $stmt->bind_param('ssss', $name, $description, $rate, $code);
+        // Execute the prepared statement
     $stmt->execute();
 
-    //declare a varible which will be passed to alert function
+    // Declare a variable which will be passed to an alert function
     if ($stmt) {
+        // If successful, set a success message
         $success = "Account Category Created";
     } else {
+        // If unsuccessful, set an error message
         $err = "Please Try Again Or Try Later";
     }
 }
+/* 
+session_start() is used to start the session.
+include('conf/config.php') and include('conf/checklogin.php')
+ include necessary configuration files and a file for checking user authentication.
+check_login() is a function that checks if the user is logged in; if not, it redirects them to the login page.
+Admin_id is retrieved from the session.
+The code checks if the form with the name 'create_acc_type' has been submitted.
+Form data is retrieved from the POST request.
+An SQL query is prepared to insert the captured information into the 'iB_Acc_types' table.
+Parameters are bound to the prepared statement using $stmt->bind_param() (s for string).
+The prepared statement is executed with $stmt->execute().
+If the execution is successful, a success message is set. Otherwise, an error message is set.
+*/
 
 ?>
 <!DOCTYPE html>

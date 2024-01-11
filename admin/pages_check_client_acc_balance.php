@@ -23,8 +23,7 @@ $admin_id = $_SESSION['admin_id'];
 
         <!-- Content Wrapper. Contains page content -->
         <?php
-        /*  Im About to do something stupid buh lets do it
-         *  get the sumof all deposits(Money In) then get the sum of all
+        /*  get the sum of all deposits(Money In) then get the sum of all
          *  Transfers and Withdrawals (Money Out).
          * Then To Calculate Balance and rate,
          * Take the rate, compute it and then add with the money in account and 
