@@ -10,9 +10,5 @@ Email	: admin@mail.com
 Password: admin
 
 
-**Staff Login Details**
-
-Email	: staff@mail.com
-Password: staff
 
 
